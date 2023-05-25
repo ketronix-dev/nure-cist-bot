@@ -1,0 +1,71 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/ketronix/Documents/nure-cist-bot/nure-cist-bot.csproj": {}
+  },
+  "projects": {
+    "/home/ketronix/Documents/nure-cist-bot/nure-cist-bot.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/ketronix/Documents/nure-cist-bot/nure-cist-bot.csproj",
+        "projectName": "nure-cist-bot",
+        "projectPath": "/home/ketronix/Documents/nure-cist-bot/nure-cist-bot.csproj",
+        "packagesPath": "/home/ketronix/.nuget/packages/",
+        "outputPath": "/home/ketronix/Documents/nure-cist-bot/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/ketronix/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "Telegram.BotAPI": {
+              "target": "Package",
+              "version": "[6.7.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/opt/dotnet/sdk/7.0.302/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
