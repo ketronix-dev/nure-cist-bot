@@ -1,16 +1,25 @@
 ﻿using Telegram.BotAPI;
-using Telegram.BotAPI.AvailableMethods;
 using Telegram.BotAPI.GettingUpdates;
 using NureCistBot.Handlers;
+using NureCistBot.BackendServices;
 
 namespace NureCistBot
 {
     class Program
     {
+        private static BotClient? bot;
         static void Main()
         {
             Console.WriteLine("Start!");
-            var bot = new BotClient("6077780376:AAF5_q0dTZYQXc9hpRCoE0TcRov_9OYhlYg");
+            if (File.Exists("config-bot.toml"))
+            {
+                bot = new BotClient(EnviromentManager.ReadBotToken());
+            }
+            else
+            {
+                EnviromentManager.Setup();
+                bot = new BotClient(EnviromentManager.ReadBotToken());
+            }
             var updates = bot.GetUpdates();
             while (true)
             {
@@ -22,13 +31,7 @@ namespace NureCistBot
                         {
                             try
                             {
-                                var message = update.Message;
-                                if (message is not null)
-                                {
-                                    bot.SendChatAction(message.Chat.Id, ChatAction.UploadDocument);
-                                    Thread.Sleep(5000);
-                                    bot.SendMessage(message.Chat.Id, "Hello World!");
-                                }
+                                UpdateHandler.HandleUpdate(bot, update);
                             }
                             catch (System.Exception)
                             {

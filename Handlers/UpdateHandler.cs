@@ -11,8 +11,7 @@ namespace NureCistBot.Handlers
             var message = update.Message;
             if (message is not null)
             {
-                bot.SendChatAction(message.Chat.Id, ChatAction.UploadDocument);
-                Thread.Sleep(5000);
+                bot.SendChatAction(message.Chat.Id, ChatAction.Typing);
                 bot.SendMessage(message.Chat.Id, "Hello World!");
             }
         }
