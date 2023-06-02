@@ -1,7 +1,7 @@
-﻿using Telegram.BotAPI;
-using Telegram.BotAPI.GettingUpdates;
+﻿using NureCistBot.BackendServices;
 using NureCistBot.Handlers;
-using NureCistBot.BackendServices;
+using Telegram.BotAPI;
+using Telegram.BotAPI.GettingUpdates;
 
 namespace NureCistBot
 {
@@ -33,9 +33,9 @@ namespace NureCistBot
                             {
                                 UpdateHandler.HandleUpdate(bot, update);
                             }
-                            catch (System.Exception)
+                            catch (System.Exception e)
                             {
-                                ExceptionHandler.SendToLogs(bot, update);
+                                ExceptionHandler.SendToLogs(bot, update, e);
                             }
                         }
                     }
