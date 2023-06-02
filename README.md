@@ -5,15 +5,15 @@ This is a Telegram bot that allows NURE students to follow their schedule withou
 ### Checklist for first release:
 - [x] Merge fixes from the `nure-schedule-bot` 
 - [x] Switch to the new architecture
-- [ ] Ability to choose any group
+- [x] Ability to choose any group
 - [x] Advanced Environment managing
 - [ ] Blocking chats
 - [ ] All chats notifications
-- [ ] Ability to switch groop in chat
+- [x] Ability to switch group in chat
 - [ ] Add google form for link to lessons
 - [ ] Human-like loging
 - [ ] CIST API integration
-- [ ] Global database for easy switch server
+- [x] Global database for easy switch server
 - [x] Using more stable library
 - [ ] Native support in bot
 

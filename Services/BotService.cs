@@ -1,21 +1,23 @@
-using Telegram.BotAPI;
-using Telegram.BotAPI.AvailableMethods;
+using Telegram.Bot;
+using Telegram.Bot.Types.Enums;
 
 namespace NureCistBot.Services
 {
     public class BotService
     {
-        public static bool IsAdmin(BotClient bot, long chatId)
+        public static async Task<bool> IsAdminAsync(ITelegramBotClient bot, long chatId)
         {
-            var members = bot.GetChatAdministrators(chatId);
-            foreach (var member in members)
+            try
             {
-                if (member.User == bot.GetMe())
-                {
-                    return true;
-                }
+                var me = await bot.GetMeAsync();
+                var chatMembers = await bot.GetChatAdministratorsAsync(chatId);
+                return chatMembers.Any(x => x.User.Id == me.Id);
             }
-            return false;
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error occured while checking bot admin status: " + ex.Message);
+                return false;
+            }
         }
     }
 }

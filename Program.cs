@@ -1,51 +1,62 @@
 ﻿using NureCistBot.BackendServices;
 using NureCistBot.Handlers;
-using Telegram.BotAPI;
-using Telegram.BotAPI.GettingUpdates;
+using Telegram.Bot;
+using Telegram.Bot.Exceptions;
+using Telegram.Bot.Polling;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
+using File = System.IO.File;
 
-namespace NureCistBot
+
+TelegramBotClient botClient;
+
+if (File.Exists("config-bot.toml"))
 {
-    class Program
+    botClient = new TelegramBotClient(EnviromentManager.ReadBotToken());
+}
+else
+{
+    EnviromentManager.Setup();
+    botClient = new TelegramBotClient(EnviromentManager.ReadBotToken());
+}
+
+using CancellationTokenSource cts = new();
+
+// StartReceiving does not block the caller thread. Receiving is done on the ThreadPool.
+ReceiverOptions receiverOptions = new()
+{
+    AllowedUpdates = new UpdateType[]
     {
-        private static BotClient? bot;
-        static void Main()
-        {
-            Console.WriteLine("Start!");
-            if (File.Exists("config-bot.toml"))
-            {
-                bot = new BotClient(EnviromentManager.ReadBotToken());
-            }
-            else
-            {
-                EnviromentManager.Setup();
-                bot = new BotClient(EnviromentManager.ReadBotToken());
-            }
-            var updates = bot.GetUpdates();
-            while (true)
-            {
-                if (updates.Length > 0)
-                {
-                    foreach (var update in updates)
-                    {
-                        if (update.Type == UpdateType.Message)
-                        {
-                            try
-                            {
-                                UpdateHandler.HandleUpdate(bot, update);
-                            }
-                            catch (System.Exception e)
-                            {
-                                ExceptionHandler.SendToLogs(bot, update, e);
-                            }
-                        }
-                    }
-                    updates = bot.GetUpdates(offset: updates.Max(u => u.UpdateId) + 1);
-                }
-                else
-                {
-                    updates = bot.GetUpdates();
-                }
-            }
-        }
+        UpdateType.Message,
+        UpdateType.ChatMember,
+        UpdateType.CallbackQuery
     }
+};
+
+botClient.StartReceiving(
+    updateHandler: UpdateHandler.HandleUpdateAsync,
+    pollingErrorHandler: HandlePollingErrorAsync,
+    receiverOptions: receiverOptions,
+    cancellationToken: cts.Token
+);
+
+var me = await botClient.GetMeAsync();
+
+Console.WriteLine($"Start listening for @{me.Username}");
+Console.ReadLine();
+
+// Send cancellation request to stop bot
+cts.Cancel();
+
+Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+{
+    var ErrorMessage = exception switch
+    {
+        ApiRequestException apiRequestException
+            => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
+        _ => exception.ToString()
+    };
+
+    Console.WriteLine(ErrorMessage);
+    return Task.CompletedTask;
 }

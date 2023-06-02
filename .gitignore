@@ -6,6 +6,7 @@
 /.vscode/
 /.config/
 /obj/
+/Data/
 Env.txt
 # Rider ignored files
 /.idea.Test.iml
