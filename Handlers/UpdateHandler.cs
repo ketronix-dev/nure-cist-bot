@@ -1,5 +1,6 @@
 using NureCistBot.BackendServices;
 using NureCistBot.Classes;
+using NureCistBot.JsonParsers;
 using NureCistBot.Services;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -86,6 +87,11 @@ namespace NureCistBot.Handlers
                                 $"Назва групи у CIST: {fromDb.CistName}\n" +
                                 $"Назва чату: {fromDb.ChatName}\n");
                         }
+                    }
+                    else if (message.Text.Contains("/test_parser"))
+                    {
+                        var groups = GroupsParser.Parse();
+                        bot.SendTextMessageAsync(message.Chat.Id, $"Успішно імпортовано {groups.Count} групп");
                     }
                 }
                 else if (message is not null && message.NewChatMembers is not null)
