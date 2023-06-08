@@ -1,5 +1,7 @@
+using NureCistBot.Generators;
 using NureCistBot.BackendServices;
 using NureCistBot.Classes;
+using NureCistBot.DateManagment;
 using NureCistBot.JsonParsers;
 using NureCistBot.Services;
 using Telegram.Bot;
@@ -11,6 +13,7 @@ namespace NureCistBot.Handlers
 {
     public class UpdateHandler
     {
+        private string Key = "KNURESked";
         public static Message? joinMessage;
         public static async Task HandleUpdateAsync(ITelegramBotClient bot, Update update, CancellationToken cancellationToken)
         {
@@ -113,15 +116,51 @@ namespace NureCistBot.Handlers
                                 $"Назва групи у CIST: {fromDb.CistName}\n" +
                                 $"Назва чату: {fromDb.ChatName}\n");
                         }
+                        else
+                        {
+                            await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                            await bot.SendTextMessageAsync(
+                                message.Chat.Id,
+                                "Ви повинні зареєструвати чат перед тим як робити запит. Як це зробити " +
+                                "ви можете дізнатися по команді <code>/help</code>",
+                                parseMode: ParseMode.Html);
+                        }
                     }
                     else if (message.Text.Contains("/day"))
                     {
                         if (Database.CheckGroup(message.Chat.Id))
                         {
                             await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                            var events = ScheduleService.GetCistEvents(
+                                            ScheduleService.GetCistShedule(Database.GetGroup(message.Chat.Id), "KNURESked"),
+                                            DateService.GetToday(),
+                                            DateService.GetToday());
+                            var messageSchedule = MessageGenerator.GenerateMessageForToday(
+                                events,
+                                Database.GetGroup(message.Chat.Id));
+
+                            if (events.Count is not 0)
+                            {
+                                await bot.SendTextMessageAsync(
+                                    message.Chat.Id,
+                                    messageSchedule,
+                                    parseMode: ParseMode.Html, disableWebPagePreview: true);
+                            }
+                            else
+                            {
+                                await bot.SendTextMessageAsync(
+                                    message.Chat.Id,
+                                    "Пар сьогодні нема, дозволяю відпочити");
+                            }
+                        }
+                        else
+                        {
+                            await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
                             await bot.SendTextMessageAsync(
                                 message.Chat.Id,
-                                "Запит на розклад на день");
+                                "Ви повинні зареєструвати чат перед тим як робити запит. Як це зробити " +
+                                "ви можете дізнатися по команді <code>/help</code>",
+                                parseMode: ParseMode.Html);
                         }
                     }
                     else if (message.Text.Contains("/week"))
@@ -129,9 +168,23 @@ namespace NureCistBot.Handlers
                         if (Database.CheckGroup(message.Chat.Id))
                         {
                             await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                            var weekDates = DateService.GetWeekDates(DateService.GetToday());
+                            var messageSchedule = MessageGenerator.GenerateMessageForWeek(
+                                Database.GetGroup(message.Chat.Id), weekDates[0], weekDates[1], "KNURESked");
+
                             await bot.SendTextMessageAsync(
                                 message.Chat.Id,
-                                "Запит на розклад на тиждень");
+                                messageSchedule,
+                                parseMode: ParseMode.Html, disableWebPagePreview: true);
+                        }
+                        else
+                        {
+                            await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                            await bot.SendTextMessageAsync(
+                                message.Chat.Id,
+                                "Ви повинні зареєструвати чат перед тим як робити запит. Як це зробити " +
+                                "ви можете дізнатися по команді <code>/help</code>",
+                                parseMode: ParseMode.Html);
                         }
                     }
                     else if (message.Text.Contains("/next_day"))
@@ -141,7 +194,16 @@ namespace NureCistBot.Handlers
                             await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
                             await bot.SendTextMessageAsync(
                                 message.Chat.Id,
-                                "Запит на розклад на наступний день");
+                                "Функція генерування розкладу на наступний день у розробці.");
+                        }
+                        else
+                        {
+                            await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                            await bot.SendTextMessageAsync(
+                                message.Chat.Id,
+                                "Ви повинні зареєструвати чат перед тим як робити запит. Як це зробити " +
+                                "ви можете дізнатися по команді <code>/help</code>",
+                                parseMode: ParseMode.Html);
                         }
                     }
                     else if (message.Text.Contains("/next_week"))
@@ -151,7 +213,16 @@ namespace NureCistBot.Handlers
                             await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
                             await bot.SendTextMessageAsync(
                                 message.Chat.Id,
-                                "Запит на розклад на наступний тиждень");
+                                "Функція генерування розкладу на наступний тиждень у розробці.");
+                        }
+                        else
+                        {
+                            await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                            await bot.SendTextMessageAsync(
+                                message.Chat.Id,
+                                "Ви повинні зареєструвати чат перед тим як робити запит. Як це зробити " +
+                                "ви можете дізнатися по команді <code>/help</code>",
+                                parseMode: ParseMode.Html);
                         }
                     }
                 }

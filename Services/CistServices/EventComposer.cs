@@ -1,6 +1,6 @@
-using NureBotSchedule.ServiceClasses;
+using NureCistBot.Classes;
 
-namespace NureBotSchedule.CistServices;
+namespace NureCistBot.CistServices;
 
 public class EventComposer
 {
@@ -66,16 +66,16 @@ public class EventComposer
 
         foreach (var item in schedule.events)
         {
-            var timeAndDateStart = DateTimeOffset.FromUnixTimeSeconds(item.start_time);
-            var timeAndDateEnd = DateTimeOffset.FromUnixTimeSeconds(item.end_time);
+            var timeAndDateStart = DateTimeOffset.FromUnixTimeSeconds((long)item.start_time);
+            var timeAndDateEnd = DateTimeOffset.FromUnixTimeSeconds((long)item.end_time);
             var cistEvent = new CistEvent()
             {
-                number_pair = item.number_pair,
-                subject = FindSubjectById(schedule.Subjects, item.subject_id),
+                number_pair = (int)item.number_pair,
+                subject = FindSubjectById(schedule.subjects, (int)item.subject_id),
                 date = DateOnly.FromDateTime(timeAndDateStart.LocalDateTime),
                 start_time = TimeOnly.FromDateTime(timeAndDateStart.LocalDateTime),
                 end_time = TimeOnly.FromDateTime(timeAndDateEnd.LocalDateTime),
-                type = GetEventType(item.type),
+                type = GetEventType((int)item.type),
                 teachers = new List<Teacher>()
             };
 

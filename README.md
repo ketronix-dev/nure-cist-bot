@@ -12,7 +12,7 @@ This is a Telegram bot that allows NURE students to follow their schedule withou
 - [x] Ability to switch group in chat
 - [ ] Add google form for link to lessons
 - [ ] Human-like loging
-- [ ] CIST API integration
+- [x] CIST API integration
 - [x] Global database for easy switch server
 - [x] Using more stable library
 - [ ] Native support in bot

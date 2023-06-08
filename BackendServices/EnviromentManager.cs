@@ -13,30 +13,17 @@ namespace NureCistBot.BackendServices
                     "A token is necessary for the work of the bot. To get the token, you need to create a bot here: @BotFather\nThe mysql database is also required for work.");
                 Console.Write("Please enter the token from the bot: ");
                 string? tokenBot = Console.ReadLine();
-                Console.Write("\nSpecify the address to the database: ");
-                string? addressDatabase = Console.ReadLine();
-                Console.Write("Specify the name of the database: ");
-                string? nameDatabase = Console.ReadLine();
-                Console.Write("Now the username: ");
-                string? nameUserDatabase = Console.ReadLine();
-                Console.Write("And the password: ");
-                string? passwordUserDatabase = Console.ReadLine();
                 Console.Write("NURE CIST API key: ");
                 string? apiKey = Console.ReadLine();
 
-                if (tokenBot != null && addressDatabase != null && nameDatabase != null &&
-                nameUserDatabase != null && passwordUserDatabase != null && apiKey != null)
+                if (tokenBot != null && apiKey != null)
                 {
                     using (FileStream fstream = new FileStream("config-bot.toml", FileMode.OpenOrCreate))
                     {
                         string configText =
                             String.Format(
-                                "botToken = '{0}'\naddressDatabase = '{1}'\nnameDatabase = '{2}'\nnameUserDatabase = '{3}'\npasswordUserDatabase = '{4}'\napiKey = '{5}'",
+                                "botToken = '{0}'\napiKey = '{1}'",
                                 tokenBot,
-                                addressDatabase,
-                                nameDatabase,
-                                nameUserDatabase,
-                                passwordUserDatabase,
                                 apiKey);
                         Console.WriteLine(configText);
                         byte[] buffer = Encoding.Default.GetBytes(configText);

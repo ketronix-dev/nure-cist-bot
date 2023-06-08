@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace NureBotSchedule.DateManagment;
+namespace NureCistBot.DateManagment;
 
 public class DateService
 {
@@ -15,7 +15,7 @@ public class DateService
     }
 
     public static DateOnly GetToday() => new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
-    
+
     public static string[] GetWeekDays(string startDateString, string endDateString)
     {
         DateTime startDate = DateTime.ParseExact(startDateString, "dd.MM.yyyy", CultureInfo.InvariantCulture);

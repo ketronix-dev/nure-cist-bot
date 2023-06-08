@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text;
 
-namespace NureBotSchedule.CistServices;
+namespace NureCistBot.CistServices;
 
 public class ApiManager
 {
@@ -26,6 +26,8 @@ public class ApiManager
 
             webRequest.ContentType = "application/json";
             webRequest.UserAgent = "KIUKI_Bot";
+
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             using (var webResponse = webRequest.GetResponse())
             using (var streamReader = new StreamReader(webResponse.GetResponseStream(), Encoding.GetEncoding("windows-1251")))
