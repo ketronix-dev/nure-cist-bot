@@ -11,18 +11,31 @@ public class GroupsParser
 
         string json = File.ReadAllText("/home/artem/Documents/groups.json");
         CistGroup? cistGroups = JsonConvert.DeserializeObject<CistGroup>(json);
-        
-        Console.WriteLine(cistGroups.university.faculties);
 
-        foreach (var faculty in cistGroups.university.faculties)
+        if (cistGroups is not null && cistGroups.university is not null)
         {
-            foreach (var direction in faculty.directions)
+            if (cistGroups.university.faculties is not null)
             {
-                foreach (var specialition in direction.specialities)
+                foreach (var faculty in cistGroups.university.faculties)
                 {
-                    foreach (var group in specialition.groups)
+                    if (faculty.directions is not null)
                     {
-                        groups.Add(group);
+                        foreach (var direction in faculty.directions)
+                        {
+                            if (direction.specialities is not null)
+                            {
+                                foreach (var specialition in direction.specialities)
+                                {
+                                    if (specialition.groups is not null)
+                                    {
+                                        foreach (var group in specialition.groups)
+                                        {
+                                            groups.Add(group);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

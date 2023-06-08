@@ -29,27 +29,38 @@ namespace NureCistBot.Handlers
 
                         if (groupToSwitch is not null)
                         {
-                            await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
-                            var group = new Group
-                            {
-                                Id = 123456,
-                                Name = groupToSwitch
-                            };
+                            var groups = GroupsParser.Parse();
 
-                            if (!Database.CheckGroup(message.Chat.Id))
+                            await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                            var group = GroupServices.FindGroupByName(groups, groupToSwitch.ToUpper());
+
+                            if (group is not null)
                             {
-                                Database.AddGroup(group, message);
-                                await bot.SendTextMessageAsync(
-                                    message.Chat.Id,
-                                    $"Тепер в цей чат буде відправлятися розклад для групи {groupToSwitch}");
+                                if (!Database.CheckGroup(message.Chat.Id))
+                                {
+                                    Database.AddGroup(group, message);
+                                    await bot.SendTextMessageAsync(
+                                        message.Chat.Id,
+                                        $"Тепер в цей чат буде відправлятися розклад для групи {groupToSwitch.ToUpper()}");
+                                }
+                                else
+                                {
+                                    Database.UpdateGroup(message, group);
+                                    await bot.SendTextMessageAsync(
+                                        message.Chat.Id,
+                                        $"Ви успішно змінили групу для цього чату, " +
+                                        $"тепер сюди буде відправлятися розклад для {groupToSwitch.ToUpper()}");
+                                }
                             }
                             else
                             {
-                                Database.UpdateGroup(message, group);
                                 await bot.SendTextMessageAsync(
                                     message.Chat.Id,
-                                    $"Ви успішно змінили групу для цього чату, " +
-                                    "тепер сюди буде відправлятися розклад для {groupToSwitch}");
+                                    "Я не зміг знайти цю групу у базі CIST, можливо вона не була в неї внесена. \n \n" +
+                                    "Будь ласка, завітайте на cist.nure.ua, та перевірте наявність групи. \n \n" +
+                                    "У випадку якщо група там все ж таки присутня, спробуйте скопіювати звідти назву, і використати у боті.\n \n" +
+                                    "<b>УВАГА! Бот буде виводити це повідомлення, якщо ви введете назву групи англійською чи російською мовами.</b>",
+                                    parseMode: ParseMode.Html);
                             }
                         }
                         else
@@ -70,7 +81,22 @@ namespace NureCistBot.Handlers
                         await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
                         await bot.SendTextMessageAsync(
                             message.Chat.Id,
-                            "Задля того щоб зареєструвати чат чи змінити групу використовуйте команду /chgroup");
+                            "Цей бот має низку команд, за допомогою яких ви можете отримати розклад для себе, " +
+                            "і своєї групи. Нижче буде список цих команд, із коротким описом, і прикладом. \n \n" +
+                            "Список команд бота: \n \n" +
+                            "\t <code>/chgroup group</code> - зміна групи у чаті, замість group треба написати назву вашої групи. " +
+                            "Наприклад: <code>/chgroup КІУКІ-22-7</code>, <code>/chgroup кіукі-22-7</code> і тд. Увага! Назву групи бот розуміє лише " +
+                            "якщо та була введена українською, через те шо він звіряє назву із реєстром на сайті cist.nure.ua." +
+                            " Якщо у вас виникла помилка зміни групи, перевірте щоб назва була українською мовою, " +
+                            "і відповідала тій що на cist.nure.ua. \n" +
+                            "\t <code>/help</code> - вам відправиться це повідомлення. \n" +
+                            "\t <code>/info</code> - вам відправиться інформація про цей чат із бази даних, якщо запис існує. \n" +
+                            "\t <code>/day</code> - вам відправиться розклад для вашої групи на поточний день. \n" +
+                            "\t <code>/week</code> - вам відправиться розклад для вашої групи на поточний тиждень. " +
+                            "У неділю ця команда вам відправить розклад вже на наступний тиждень. \n" +
+                            "\t <code>/next_day</code> - відправляє розклад на наступний день. \n" +
+                            "\t <code>/next_week</code> - відправить розклад на наступний тижденью",
+                            parseMode: ParseMode.Html);
                     }
                     else if (message.Text.Contains("/info"))
                     {
@@ -88,10 +114,45 @@ namespace NureCistBot.Handlers
                                 $"Назва чату: {fromDb.ChatName}\n");
                         }
                     }
-                    else if (message.Text.Contains("/test_parser"))
+                    else if (message.Text.Contains("/day"))
                     {
-                        var groups = GroupsParser.Parse();
-                        bot.SendTextMessageAsync(message.Chat.Id, $"Успішно імпортовано {groups.Count} групп");
+                        if (Database.CheckGroup(message.Chat.Id))
+                        {
+                            await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                            await bot.SendTextMessageAsync(
+                                message.Chat.Id,
+                                "Запит на розклад на день");
+                        }
+                    }
+                    else if (message.Text.Contains("/week"))
+                    {
+                        if (Database.CheckGroup(message.Chat.Id))
+                        {
+                            await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                            await bot.SendTextMessageAsync(
+                                message.Chat.Id,
+                                "Запит на розклад на тиждень");
+                        }
+                    }
+                    else if (message.Text.Contains("/next_day"))
+                    {
+                        if (Database.CheckGroup(message.Chat.Id))
+                        {
+                            await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                            await bot.SendTextMessageAsync(
+                                message.Chat.Id,
+                                "Запит на розклад на наступний день");
+                        }
+                    }
+                    else if (message.Text.Contains("/next_week"))
+                    {
+                        if (Database.CheckGroup(message.Chat.Id))
+                        {
+                            await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                            await bot.SendTextMessageAsync(
+                                message.Chat.Id,
+                                "Запит на розклад на наступний тиждень");
+                        }
                     }
                 }
                 else if (message is not null && message.NewChatMembers is not null)
