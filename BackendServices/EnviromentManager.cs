@@ -47,5 +47,19 @@ namespace NureCistBot.BackendServices
             }
             return token;
         }
+        public static string ReadApiKey()
+        {
+            string key;
+            using (FileStream fstream = File.OpenRead("config-bot.toml"))
+            {
+                byte[] buffer = new byte[fstream.Length];
+                fstream.Read(buffer, 0, buffer.Length);
+                string textFromFile = Encoding.Default.GetString(buffer);
+
+                var model = Toml.ToModel(textFromFile);
+                key = (string)model["apiKey"];
+            }
+            return key;
+        }
     }
 }

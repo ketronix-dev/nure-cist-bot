@@ -7,6 +7,7 @@
 /.config/
 /obj/
 /Data/
+/Cache/
 Env.txt
 # Rider ignored files
 /.idea.Test.iml
@@ -20,3 +21,4 @@ Env.txt
 /dataSources.local.xml
 
 config-bot.toml
+Cache/schedule-10304333-8.6.2023.json

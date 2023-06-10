@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using NureCistBot.CistServices;
 using NureCistBot.Classes;
 
 namespace NureCistBot.JsonParsers;
@@ -9,7 +10,7 @@ public class GroupsParser
     {
         List<Group> groups = new List<Group>();
 
-        string json = File.ReadAllText("/home/artem/Documents/groups.json");
+        string json = File.ReadAllText(ApiManager.UpdateGroupsList());
         CistGroup? cistGroups = JsonConvert.DeserializeObject<CistGroup>(json);
 
         if (cistGroups is not null && cistGroups.university is not null)

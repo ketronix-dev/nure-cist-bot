@@ -14,7 +14,19 @@ public class DateService
         return days;
     }
 
+    public static DateOnly[] GetNextWeekDates(DateOnly date)
+    {
+        var days = new DateOnly[2];
+        var currentDate = date.AddDays(7 - (int)date.DayOfWeek + (int)DayOfWeek.Monday);
+        days[0] = currentDate;
+        currentDate = currentDate.AddDays(5);
+        days[1] = currentDate;
+        return days;
+    }
+
+
     public static DateOnly GetToday() => new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+    public static DateOnly GetNextDay() => new DateOnly(DateTime.Now.AddDays(1).Year, DateTime.Now.AddDays(1).Month, DateTime.Now.AddDays(1).Day);
 
     public static string[] GetWeekDays(string startDateString, string endDateString)
     {

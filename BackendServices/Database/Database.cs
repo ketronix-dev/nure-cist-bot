@@ -40,10 +40,24 @@ namespace NureCistBot.BackendServices
                 collection.Insert(NewChat);
             }
         }
+        public static void BlockGroup(DbChat chat)
+        {
+            var collection = db.GetCollection<DbChat>("BlockedChats");
+            collection.Insert(chat);
+        }
 
         public static bool CheckGroup(long Id)
         {
             var collection = db.GetCollection<DbChat>("Chats");
+            if (collection.Count(x => x.Id == Id) > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+        public static bool IsBlocked(long Id)
+        {
+            var collection = db.GetCollection<DbChat>("BlockedChats");
             if (collection.Count(x => x.Id == Id) > 0)
             {
                 return true;
@@ -55,6 +69,11 @@ namespace NureCistBot.BackendServices
         {
             var collection = db.GetCollection<DbChat>("Chats");
             return collection.FindOne(x => x.Id == Id);
+        }
+        public static List<DbChat> GetGroups()
+        {
+            var collection = db.GetCollection<DbChat>("Chats");
+            return collection.FindAll().ToList();
         }
 
         public static void UpdateGroup(Message message, Group group)
