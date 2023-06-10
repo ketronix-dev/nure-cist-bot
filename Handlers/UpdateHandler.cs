@@ -168,6 +168,14 @@ namespace NureCistBot.Handlers
                                                 parseMode: ParseMode.Html);
                                         }
                                     }
+                                    else if (message.Text.Contains("/start"))
+                                    {
+                                        await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                                        await bot.SendTextMessageAsync(
+                                            message.Chat.Id,
+                                            "Привіт! Цей бот створений задля відправки розкладу по запиту, як цим користуватися ти побачиш по команді <code>/help</code>.",
+                                            parseMode: ParseMode.Html);
+                                    }
                                     else if (message.Text.Contains("/day"))
                                     {
                                         if (Database.CheckGroup(message.Chat.Id))
