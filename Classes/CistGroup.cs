@@ -26,6 +26,7 @@ public class Direction
     public string? short_name { get; set; }
     public string? full_name { get; set; }
     public Specialition[]? specialities { get; set; }
+    public Group[]? groups { get; set; }
 }
 
 public class Specialition

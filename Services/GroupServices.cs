@@ -7,7 +7,7 @@ namespace NureCistBot.Services
         {
             foreach (Group group in groups)
             {
-                if (group.Name == name)
+                if (group.Name.ToUpper() == name)
                 {
                     return group;
                 }

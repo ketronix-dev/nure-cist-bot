@@ -23,6 +23,13 @@ public class GroupsParser
                     {
                         foreach (var direction in faculty.directions)
                         {
+                            if (direction.groups is not null)
+                            {
+                                foreach (var group in direction.groups)
+                                {
+                                    groups.Add(group);
+                                }
+                            }
                             if (direction.specialities is not null)
                             {
                                 foreach (var specialition in direction.specialities)
