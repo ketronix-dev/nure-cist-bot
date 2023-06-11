@@ -66,6 +66,8 @@ namespace NureCistBot.Handlers
                                 {
                                     if (message.Text.Contains("/chgroup"))
                                     {
+                                        await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                                        
                                         string? groupToSwitch = null;
                                         if (message.Text.Split().Length > 1)
                                         {
@@ -75,8 +77,7 @@ namespace NureCistBot.Handlers
                                         if (groupToSwitch is not null)
                                         {
                                             var groups = GroupsParser.Parse();
-
-                                            await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                                            
                                             var group = GroupServices.FindGroupByName(groups, groupToSwitch.ToUpper());
 
                                             if (group is not null)
