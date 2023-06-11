@@ -7,8 +7,8 @@ This is a Telegram bot that allows NURE students to follow their schedule withou
 - [x] Switch to the new architecture
 - [x] Ability to choose any group
 - [x] Advanced Environment managing
-- [ ] Blocking chats
-- [ ] All chats notifications
+- [x] Blocking chats
+- [x] All chats notifications
 - [x] Ability to switch group in chat
 - [ ] Add google form for link to lessons
 - [ ] Human-like loging

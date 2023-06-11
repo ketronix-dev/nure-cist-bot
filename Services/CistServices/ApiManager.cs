@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text;
+using NureCistBot.JsonParsers;
 
 namespace NureCistBot.CistServices;
 
@@ -39,7 +40,7 @@ public class ApiManager
                 streamWriter.Flush();
                 memoryStream.Position = 0;
 
-                var json = Encoding.UTF8.GetString(memoryStream.ToArray());
+                var json = JsonFixers.TryFix(Encoding.UTF8.GetString(memoryStream.ToArray()));
                 File.WriteAllBytes($"Cache/schedule-{Id}-{day}.json", Encoding.UTF8.GetBytes(json));
             }
 

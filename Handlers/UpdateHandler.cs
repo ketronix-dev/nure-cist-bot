@@ -69,7 +69,7 @@ namespace NureCistBot.Handlers
                                         string? groupToSwitch = null;
                                         if (message.Text.Split().Length > 1)
                                         {
-                                            groupToSwitch = message.Text.Split()[1];
+                                            groupToSwitch = message.Text.Split(" ", StringSplitOptions.RemoveEmptyEntries)[1];
                                         }
 
                                         if (groupToSwitch is not null)
@@ -189,18 +189,27 @@ namespace NureCistBot.Handlers
                                                 events,
                                                 Database.GetGroup(message.Chat.Id));
 
-                                            if (events.Count is not 0)
+                                            if (events is not null)
                                             {
-                                                await bot.SendTextMessageAsync(
-                                                    message.Chat.Id,
-                                                    messageSchedule,
-                                                    parseMode: ParseMode.Html, disableWebPagePreview: true);
+                                                if (events.Count is not 0)
+                                                {
+                                                    await bot.SendTextMessageAsync(
+                                                        message.Chat.Id,
+                                                        messageSchedule,
+                                                        parseMode: ParseMode.Html, disableWebPagePreview: true);
+                                                }
+                                                else
+                                                {
+                                                    await bot.SendTextMessageAsync(
+                                                        message.Chat.Id,
+                                                        "Пар сьогодні нема, дозволяю відпочити");
+                                                }
                                             }
                                             else
                                             {
                                                 await bot.SendTextMessageAsync(
                                                     message.Chat.Id,
-                                                    "Пар сьогодні нема, дозволяю відпочити");
+                                                    messageSchedule);
                                             }
                                         }
                                         else
@@ -250,18 +259,27 @@ namespace NureCistBot.Handlers
                                                 events,
                                                 Database.GetGroup(message.Chat.Id));
 
-                                            if (events.Count is not 0)
+                                            if (events is not null)
                                             {
-                                                await bot.SendTextMessageAsync(
-                                                    message.Chat.Id,
-                                                    messageSchedule,
-                                                    parseMode: ParseMode.Html, disableWebPagePreview: true);
+                                                if (events.Count is not 0)
+                                                {
+                                                    await bot.SendTextMessageAsync(
+                                                        message.Chat.Id,
+                                                        messageSchedule,
+                                                        parseMode: ParseMode.Html, disableWebPagePreview: true);
+                                                }
+                                                else
+                                                {
+                                                    await bot.SendTextMessageAsync(
+                                                        message.Chat.Id,
+                                                        "Пар в цей день нема, дозволяю відпочити");
+                                                }
                                             }
                                             else
                                             {
                                                 await bot.SendTextMessageAsync(
                                                     message.Chat.Id,
-                                                    "Пар в цей день нема, дозволяю відпочити");
+                                                    messageSchedule);
                                             }
                                         }
                                         else

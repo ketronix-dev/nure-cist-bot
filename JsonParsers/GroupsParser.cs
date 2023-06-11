@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using NureCistBot.CistServices;
 using NureCistBot.Classes;
+using NureCistBot.Extensions;
 
 namespace NureCistBot.JsonParsers;
 
@@ -10,7 +11,7 @@ public class GroupsParser
     {
         List<Group> groups = new List<Group>();
 
-        string json = File.ReadAllText(ApiManager.UpdateGroupsList());
+        string json = JsonFixers.TryFix(File.ReadAllText(ApiManager.UpdateGroupsList()));
         CistGroup? cistGroups = JsonConvert.DeserializeObject<CistGroup>(json);
 
         if (cistGroups is not null && cistGroups.university is not null)

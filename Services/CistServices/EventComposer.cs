@@ -60,47 +60,60 @@ public class EventComposer
         return "Лк";
     }
 
-    public static CistEvent[] GetEvents(Schedule schedule)
+    public static CistEvent[]? GetEvents(Schedule? schedule)
     {
         List<CistEvent> events = new List<CistEvent>();
 
-        foreach (var item in schedule.events)
+        if (schedule is not null)
         {
-            var timeAndDateStart = DateTimeOffset.FromUnixTimeSeconds((long)item.start_time);
-            var timeAndDateEnd = DateTimeOffset.FromUnixTimeSeconds((long)item.end_time);
-            var cistEvent = new CistEvent()
+            if (schedule.events is not null)
             {
-                number_pair = (int)item.number_pair,
-                subject = FindSubjectById(schedule.subjects, (int)item.subject_id),
-                date = DateOnly.FromDateTime(timeAndDateStart.LocalDateTime),
-                start_time = TimeOnly.FromDateTime(timeAndDateStart.LocalDateTime),
-                end_time = TimeOnly.FromDateTime(timeAndDateEnd.LocalDateTime),
-                type = GetEventType((int)item.type),
-                teachers = new List<Teacher>()
-            };
-
-            if (cistEvent.subject.id == 8051836)
-            {
-                cistEvent.teachers.Add(new Teacher()
+                foreach (var item in schedule.events)
                 {
-                    full_name = "Не зазначено",
-                    short_name = "Не зазначено",
-                    id = 12345
-                });
+                    var timeAndDateStart = DateTimeOffset.FromUnixTimeSeconds((long)item.start_time);
+                    var timeAndDateEnd = DateTimeOffset.FromUnixTimeSeconds((long)item.end_time);
+                    var cistEvent = new CistEvent()
+                    {
+                        number_pair = (int)item.number_pair,
+                        subject = FindSubjectById(schedule.subjects, (int)item.subject_id),
+                        date = DateOnly.FromDateTime(timeAndDateStart.LocalDateTime),
+                        start_time = TimeOnly.FromDateTime(timeAndDateStart.LocalDateTime),
+                        end_time = TimeOnly.FromDateTime(timeAndDateEnd.LocalDateTime),
+                        type = GetEventType((int)item.type),
+                        teachers = new List<Teacher>()
+                    };
+
+                    if (cistEvent.subject.id == 8051836)
+                    {
+                        cistEvent.teachers.Add(new Teacher()
+                        {
+                            full_name = "Не зазначено",
+                            short_name = "Не зазначено",
+                            id = 12345
+                        });
+                    }
+                    else
+                    {
+                        foreach (var teacher in item.teachers)
+                        {
+                            var teach = FindTeacherById(schedule.teachers, teacher);
+
+                            cistEvent.teachers.Add(teach);
+                        }
+                    }
+
+                    events.Add(cistEvent);
+                }
+                return events.ToArray();
             }
             else
             {
-                foreach (var teacher in item.teachers)
-                {
-                    var teach = FindTeacherById(schedule.teachers, teacher);
-
-                    cistEvent.teachers.Add(teach);
-                }
+                return null;
             }
-
-            events.Add(cistEvent);
         }
-
-        return events.ToArray();
+        else
+        {
+            return null;
+        }
     }
 }
