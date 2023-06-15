@@ -252,7 +252,7 @@ namespace NureCistBot.Handlers
                                                         ScheduleService.GetCistShedule(Database.GetGroup(message.Chat.Id), EnviromentManager.ReadApiKey()),
                                                         DateService.GetNextDay(),
                                                         DateService.GetNextDay());
-                                        var messageSchedule = MessageGenerator.GenerateMessageForToday(
+                                        var messageSchedule = MessageGenerator.GenerateMessageForNextDay(
                                             events,
                                             Database.GetGroup(message.Chat.Id));
 
