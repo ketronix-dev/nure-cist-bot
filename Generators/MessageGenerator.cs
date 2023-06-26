@@ -7,10 +7,10 @@ namespace NureCistBot.Generators;
 public class MessageGenerator
 {
     public static string DonateHTML = "\n \n" +
-                                      "<a href=\"https://t.me/kiuki_22_botinfo\">Info</a> | " +
-                                      "<a href=\"https://donatello.to/ketronix\">Donate</a> | " +
-                                      "<a href=\"https://t.me/ketronix_dev\">Support</a> | " +
-                                      "<a href=\"https://github.com/ketronix-dev/nure-cist-bot\">Source code</a>" +
+                                      "<a href=\"https://t.me/kiuki_22_botinfo\">Канал з інфою</a> | " +
+                                      "<a href=\"https://donatello.to/ketronix\">Підтримати розробку</a> | " +
+                                      "<a href=\"https://t.me/ketronix_dev\">Адмін</a> | " +
+                                      "<a href=\"https://github.com/ketronix-dev/nure-cist-bot\">Код</a>" +
                                       "\n";
     public static string GenerateMessageForToday(List<CistEvent>? events, DbChat chat)
     {
@@ -25,6 +25,32 @@ public class MessageGenerator
             else
             {
                 message = $"Розклад на: {$"{DateTime.Now.Day}.{DateTime.Now.Month}.{DateTime.Now.Year}"} \n --------------------------- \n";
+                foreach (var i in events)
+                {
+                    message += HtmlService.GetEventHtml(i, chat.CistId.ToString());
+                }
+            }
+            return message + DonateHTML;
+        }
+        else
+        {
+            return "Пар нема.";
+        }
+    }
+
+    public static string GenerateMessageForNextDay(List<CistEvent>? events, DbChat chat)
+    {
+        if (events is not null)
+        {
+            string message = "";
+
+            if (DateTime.Now.DayOfWeek == DayOfWeek.Sunday)
+            {
+                message = "Пар завтра нема, дозволяю відпочити";
+            }
+            else
+            {
+                message = $"Розклад на: {$"{DateTime.Now.AddDays(1).Day}.{DateTime.Now.AddDays(1).Month}.{DateTime.Now.AddDays(1).Year}"} \n --------------------------- \n";
                 foreach (var i in events)
                 {
                     message += HtmlService.GetEventHtml(i, chat.CistId.ToString());
