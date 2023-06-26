@@ -16,7 +16,9 @@ namespace NureCistBot.Handlers
     public class UpdateHandler
     {
         public static Message? joinMessage;
-        public static async Task HandleUpdateAsync(ITelegramBotClient bot, Update update, CancellationToken cancellationToken)
+
+        public static async Task HandleUpdateAsync(ITelegramBotClient bot, Update update,
+            CancellationToken cancellationToken)
         {
             var message = update.Message;
             try
@@ -25,33 +27,32 @@ namespace NureCistBot.Handlers
                 {
                     if (message is not null && message.Text is not null)
                     {
-                        if (message.Chat.Type == ChatType.Private && message.Chat.Id == 946530105)
+                        var splited = message.Text.Split('|');
+                        if (message.Chat.Type == ChatType.Private && message.Chat.Id == 946530105 &&
+                            splited.Length >= 2)
                         {
-                            var splited = message.Text.Split('|');
-                            if (splited.Length >= 2)
+                            if (message.Text.Contains("/notify"))
                             {
-                                if (message.Text.Contains("/notify"))
+                                var chats = Database.GetGroups();
+                                foreach (var chat in chats)
                                 {
-                                    var chats = Database.GetGroups();
-                                    foreach (var chat in chats)
-                                    {
-                                        Console.WriteLine(chat.Id);
-                                        await bot.SendChatActionAsync(chat.Id, ChatAction.Typing);
-                                        await bot.SendTextMessageAsync(
-                                            chat.Id,
-                                            "Notify text:" + splited[1]
-                                        );
-                                    }
-                                }
-                                if (message.Text.Contains("/ban"))
-                                {
-                                    Database.BlockGroup(Database.GetGroup(long.Parse(splited[1])));
-                                    await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                                    Console.WriteLine(chat.Id);
+                                    await bot.SendChatActionAsync(chat.Id, ChatAction.Typing);
                                     await bot.SendTextMessageAsync(
-                                        message.Chat.Id,
-                                        "Your are banned:" + splited[1]
+                                        chat.Id,
+                                        splited[1]
                                     );
                                 }
+                            }
+
+                            if (message.Text.Contains("/ban"))
+                            {
+                                Database.BlockGroup(Database.GetGroup(long.Parse(splited[1])));
+                                await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                                await bot.SendTextMessageAsync(
+                                    message.Chat.Id,
+                                    "Your are banned:" + splited[1]
+                                );
                             }
                         }
                         else
@@ -67,17 +68,18 @@ namespace NureCistBot.Handlers
                                     if (message.Text.Contains("/chgroup"))
                                     {
                                         await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
-                                        
+
                                         string? groupToSwitch = null;
                                         if (message.Text.Split().Length > 1)
                                         {
-                                            groupToSwitch = message.Text.Split(" ", StringSplitOptions.RemoveEmptyEntries)[1];
+                                            groupToSwitch = message.Text.Split(" ",
+                                                StringSplitOptions.RemoveEmptyEntries)[1];
                                         }
 
                                         if (groupToSwitch is not null)
                                         {
                                             var groups = GroupsParser.Parse();
-                                            
+
                                             var group = GroupServices.FindGroupByName(groups, groupToSwitch.ToUpper());
 
                                             if (group is not null)
@@ -183,9 +185,10 @@ namespace NureCistBot.Handlers
                                         {
                                             await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
                                             var events = ScheduleService.GetCistEvents(
-                                                            ScheduleService.GetCistShedule(Database.GetGroup(message.Chat.Id), EnviromentManager.ReadApiKey()),
-                                                            DateService.GetToday(),
-                                                            DateService.GetToday());
+                                                ScheduleService.GetCistShedule(Database.GetGroup(message.Chat.Id),
+                                                    EnviromentManager.ReadApiKey()),
+                                                DateService.GetToday(),
+                                                DateService.GetToday());
                                             var messageSchedule = MessageGenerator.GenerateMessageForToday(
                                                 events,
                                                 Database.GetGroup(message.Chat.Id));
@@ -230,7 +233,8 @@ namespace NureCistBot.Handlers
                                             await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
                                             var weekDates = DateService.GetWeekDates(DateService.GetToday());
                                             var messageSchedule = MessageGenerator.GenerateMessageForWeek(
-                                                Database.GetGroup(message.Chat.Id), weekDates[0], weekDates[1], EnviromentManager.ReadApiKey());
+                                                Database.GetGroup(message.Chat.Id), weekDates[0], weekDates[1],
+                                                EnviromentManager.ReadApiKey());
 
                                             await bot.SendTextMessageAsync(
                                                 message.Chat.Id,
@@ -253,9 +257,10 @@ namespace NureCistBot.Handlers
                                         {
                                             await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
                                             var events = ScheduleService.GetCistEvents(
-                                                            ScheduleService.GetCistShedule(Database.GetGroup(message.Chat.Id), EnviromentManager.ReadApiKey()),
-                                                            DateService.GetNextDay(),
-                                                            DateService.GetNextDay());
+                                                ScheduleService.GetCistShedule(Database.GetGroup(message.Chat.Id),
+                                                    EnviromentManager.ReadApiKey()),
+                                                DateService.GetNextDay(),
+                                                DateService.GetNextDay());
                                             var messageSchedule = MessageGenerator.GenerateMessageForToday(
                                                 events,
                                                 Database.GetGroup(message.Chat.Id));
@@ -300,7 +305,8 @@ namespace NureCistBot.Handlers
                                             await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
                                             var weekDates = DateService.GetNextWeekDates(DateService.GetToday());
                                             var messageSchedule = MessageGenerator.GenerateMessageForWeek(
-                                                Database.GetGroup(message.Chat.Id), weekDates[0], weekDates[1], EnviromentManager.ReadApiKey());
+                                                Database.GetGroup(message.Chat.Id), weekDates[0], weekDates[1],
+                                                EnviromentManager.ReadApiKey());
 
                                             await bot.SendTextMessageAsync(
                                                 message.Chat.Id,
@@ -315,6 +321,23 @@ namespace NureCistBot.Handlers
                                                 "Ви повинні зареєструвати чат перед тим як робити запит. Як це зробити " +
                                                 "ви можете дізнатися по команді <code>/help</code>",
                                                 parseMode: ParseMode.Html);
+                                        }
+                                    }
+                                    else if (message.Text.Contains("/list") && message.Chat.Id == 946530105)
+                                    {
+                                        var chats = Database.GetGroups();
+                                        foreach (var chat in chats)
+                                        {
+                                            Console.WriteLine(chat.Id);
+                                            await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                                            await bot.SendTextMessageAsync(
+                                                message.Chat.Id,
+                                                $"ID чату: {chat.Id}\n" +
+                                                $"Приватний: {chat.IsPrivate}\n" +
+                                                $"Ідентифікатор CIST: {chat.CistId}\n" +
+                                                $"Назва групи у CIST: {chat.CistName}\n" +
+                                                $"Назва чату: {chat.ChatName}\n"
+                                            );
                                         }
                                     }
                                 }
