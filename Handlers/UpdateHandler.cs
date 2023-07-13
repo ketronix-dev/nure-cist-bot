@@ -1,15 +1,15 @@
-using NureCistBot.Generators;
+using System.Net.NetworkInformation;
+using Newtonsoft.Json;
 using NureCistBot.BackendServices;
 using NureCistBot.Classes;
 using NureCistBot.DateManagment;
+using NureCistBot.Generators;
 using NureCistBot.JsonParsers;
 using NureCistBot.Services;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
-using System.Net.NetworkInformation;
-using Newtonsoft.Json;
 
 namespace NureCistBot.Handlers
 {
@@ -143,7 +143,9 @@ namespace NureCistBot.Handlers
                                             "\t <code>/week</code> - вам відправиться розклад для вашої групи на поточний тиждень. " +
                                             "У неділю ця команда вам відправить розклад вже на наступний тиждень. \n" +
                                             "\t <code>/next_day</code> - відправляє розклад на наступний день. \n" +
-                                            "\t <code>/next_week</code> - відправить розклад на наступний тижденью",
+                                            "\t <code>/next_week</code> - відправить розклад на наступний тиждень. \n \n" +
+                                            "<b>УВАГА!</b> Якщо ви зробите запит на розклад вперше за добу - то підготовка розкладу буде тривати " +
+                                            " приблизно 11 секунд. Подякувати за це можете розробникам CISTу.",
                                             parseMode: ParseMode.Html);
                                     }
                                     else if (message.Text.Contains("/info"))

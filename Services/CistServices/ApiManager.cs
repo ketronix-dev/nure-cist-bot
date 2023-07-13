@@ -23,7 +23,7 @@ public class ApiManager
         else
         {
             Directory.CreateDirectory("Cache");
-            Thread.Sleep(4000);
+            Thread.Sleep(9000);
             var webRequest = WebRequest.Create($"https://cist.nure.ua/ias/app/tt/P_API_EVEN_JSON?type_id=1&timetable_id={Id}&time_from=1662004800&time_to=1690696800&idClient={Key}") as HttpWebRequest;
 
             webRequest.ContentType = "application/json";
@@ -58,7 +58,7 @@ public class ApiManager
         if (due <= 0)
         {
             Directory.CreateDirectory("Cache");
-            Thread.Sleep(4000);
+            Thread.Sleep(9000);
             var webRequest = WebRequest.Create("https://cist.nure.ua/ias/app/tt/P_API_GROUP_JSON") as HttpWebRequest;
 
             webRequest.ContentType = "application/json";
