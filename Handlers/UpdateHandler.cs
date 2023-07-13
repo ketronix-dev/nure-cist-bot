@@ -328,10 +328,11 @@ namespace NureCistBot.Handlers
                                     else if (message.Text.Contains("/list") && message.Chat.Id == 946530105)
                                     {
                                         var chats = Database.GetGroups();
+                                        await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                                        Thread.Sleep(1000);
                                         foreach (var chat in chats)
                                         {
                                             Console.WriteLine(chat.Id);
-                                            await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
                                             await bot.SendTextMessageAsync(
                                                 message.Chat.Id,
                                                 $"ID чату: {chat.Id}\n" +
