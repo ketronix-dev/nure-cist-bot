@@ -342,6 +342,8 @@ namespace NureCistBot.Handlers
                                             );
                                             Thread.Sleep(1000);
                                         }
+
+                                        await bot.SendTextMessageAsync(message.Chat.Id, $"Всього {chats.Count} чатів.");
                                     }
                                 }
                                 else
