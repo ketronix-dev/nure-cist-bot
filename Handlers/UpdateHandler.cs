@@ -331,7 +331,6 @@ namespace NureCistBot.Handlers
                                         await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
                                         foreach (var chat in chats)
                                         {
-                                            Console.WriteLine(chat.Id);
                                             await bot.SendTextMessageAsync(
                                                 message.Chat.Id,
                                                 $"ID чату: {chat.Id}\n" +
