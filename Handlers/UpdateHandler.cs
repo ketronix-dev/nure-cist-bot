@@ -329,7 +329,6 @@ namespace NureCistBot.Handlers
                                     {
                                         var chats = Database.GetGroups();
                                         await bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
-                                        Thread.Sleep(1000);
                                         foreach (var chat in chats)
                                         {
                                             Console.WriteLine(chat.Id);
@@ -341,6 +340,7 @@ namespace NureCistBot.Handlers
                                                 $"Назва групи у CIST: {chat.CistName}\n" +
                                                 $"Назва чату: {chat.ChatName}\n"
                                             );
+                                            Thread.Sleep(1000);
                                         }
                                     }
                                 }
