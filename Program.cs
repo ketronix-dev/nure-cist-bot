@@ -56,7 +56,6 @@ Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, 
             => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
         _ => exception.ToString()
     };
-
-    Console.WriteLine(errorMessage);
+    
     return Task.CompletedTask;
 }
