@@ -45,16 +45,6 @@ public class HtmlService
         if (i.subject.brief == "ІМ")
         {
             link = SubjectLink(GroupId, i, true).Result;
-            Console.WriteLine($"Номер пари: {i.number_pair} \n" +
-                              $"Предмет: {i.subject.brief} \n" +
-                              $"Дата: {i.date} \n" +
-                              $"Старт: {i.start_time} \n" +
-                              $"Кінець: {i.end_time} \n" +
-                              $"Тип: {i.type} \n" +
-                              $"Викладач: {i.teachers[0].short_name} \n" +
-                              $"Викладач ID: {i.teachers[0].id} \n" +
-                              $"Link: {link} \n" +
-                              "-----------------\n");
         }
         else
         {

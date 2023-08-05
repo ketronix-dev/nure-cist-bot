@@ -36,12 +36,18 @@ namespace NureCistBot.Handlers
                                 var chats = Database.GetGroups();
                                 foreach (var chat in chats)
                                 {
-                                    Console.WriteLine(chat.Id);
-                                    await bot.SendChatActionAsync(chat.Id, ChatAction.Typing);
-                                    await bot.SendTextMessageAsync(
-                                        chat.Id,
-                                        splited[1]
-                                    );
+                                    try
+                                    {
+                                        await bot.SendChatActionAsync(chat.Id, ChatAction.Typing);
+                                        await bot.SendTextMessageAsync(
+                                            chat.Id,
+                                            splited[1]
+                                        );
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        continue;
+                                    }
                                 }
                             }
 
@@ -343,6 +349,12 @@ namespace NureCistBot.Handlers
                                         }
 
                                         await bot.SendTextMessageAsync(message.Chat.Id, $"Всього {chats.Count} чатів.");
+                                        
+                                        await using Stream stream = System.IO.File.OpenRead(@"Data/Database.db");
+                                        await bot.SendDocumentAsync(
+                                            chatId: message.Chat.Id,
+                                            document: InputFile.FromStream(stream: stream, fileName: "Database.db"),
+                                            caption: "База даних на випадок смерті бота.");
                                     }
                                 }
                                 else
@@ -375,12 +387,7 @@ namespace NureCistBot.Handlers
             }
             catch (Exception e)
             {
-                await bot.SendTextMessageAsync(
-                    -1001638301850,
-                    JsonConvert.SerializeObject(update, Formatting.Indented));
-                await bot.SendTextMessageAsync(
-                    -1001638301850,
-                    JsonConvert.SerializeObject(e, Formatting.Indented));
+                ExceptionHandler.SendToLogs(bot, update, e);
             }
         }
     }

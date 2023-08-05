@@ -15,7 +15,6 @@ namespace NureCistBot.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error occured while checking bot admin status: " + ex.Message);
                 return false;
             }
         }
