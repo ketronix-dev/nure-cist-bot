@@ -24,7 +24,7 @@ public class ApiManager
         {
             Directory.CreateDirectory("Cache");
             Thread.Sleep(1000);
-            var webRequest = WebRequest.Create($"https://cist.nure.ua/ias/app/tt/P_API_EVEN_JSON?type_id=1&timetable_id={Id}&time_from=1662004800&time_to=1690696800&idClient={Key}") as HttpWebRequest;
+            var webRequest = WebRequest.Create($"https://cist.nure.ua/ias/app/tt/P_API_EVEN_JSON?type_id=1&timetable_id={Id}&time_from=1693478679&time_to=1722422679&idClient={Key}") as HttpWebRequest;
 
             webRequest.ContentType = "application/json";
 
